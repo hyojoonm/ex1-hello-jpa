@@ -1,7 +1,6 @@
 package hellojpa;
 
-import hellojpa.Member.Member;
-import hellojpa.Member.RoleType;
+import hellojpa.Member.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,7 +12,7 @@ import java.util.List;
 public class JpaMain {
 
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello1");
 
         EntityManager em = emf.createEntityManager();
 
@@ -21,14 +20,25 @@ public class JpaMain {
 
         tx.begin();
         try{
-            Member member = new Member();
-            member.setUsername("C");
-            System.out.println("=============================");
-            em.persist(member);
-            System.out.println("member.getId() = " + member.getId());
-            System.out.println("=============================");
+
+            Movie movie =new Movie();
+            movie.setDirector("Aaaa");
+            movie.setActor("Bbbb");
+            movie.setName("바람과 함께 사라진다");
+            movie.setPrice(10000);
+
+            em.persist(movie);
+
+            em.flush();
+            em.clear();
+
+            Item item = em.find(Item.class, movie.getId());
+            System.out.println("item = " + item);
+
+
             tx.commit();
         } catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
